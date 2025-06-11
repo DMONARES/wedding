@@ -1,16 +1,10 @@
-<script setup>
-	useSeoMeta({
-		title      : 'NUXT-TEMPLATE',
-		description: 'NUXT-TEMPLATE - description',
-		keywords   : 'NUXT-TEMPLATE - keywords',
-	});
-</script>
+<script setup></script>
 
 <template>
 	<div>
+		<YandexMap />
+		<MyForm />
 	</div>
 </template>
 
-<style lang='scss'>
-
-</style>
+<style lang="scss"></style>
