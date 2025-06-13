@@ -3,8 +3,8 @@
 <template>
 	<div>
 		<!-- <YandexMap /> -->
-		<!-- <MyForm /> -->
-		 <Timer />
+		<MyForm />
+		 <!-- <Timer /> -->
 	</div>
 </template>
 

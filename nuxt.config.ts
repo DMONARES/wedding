@@ -3,15 +3,12 @@ export default defineNuxtConfig({
 	compatibilityDate: "2024-11-01",
 	devtools: { enabled: true },
 
-	modules: ["@pinia/nuxt", "@nuxtjs/color-mode"],
-
-	colorMode: {
-		classSuffix: "",
-	},
+	modules: ["@pinia/nuxt"],
 
 	runtimeConfig: {
 		telegramToken: process.env.TELEGRAM_TOKEN,
 		telegramChatId: process.env.TELEGRAM_CHAT_ID,
+		googleSheetId: process.env.GOOGLE_SHEET_ID,
 	},
 
 	// если вам нужно проксировать получение данных с элемента ( или любые другие ) - раскоментируйте код ниже и добавьте данные в env файл с ключом process.env.NUXT_PUBLIC_ELEMENT_HOST ⬇️
