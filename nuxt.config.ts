@@ -9,6 +9,7 @@ export default defineNuxtConfig({
 		telegramToken: process.env.TELEGRAM_TOKEN,
 		telegramChatId: process.env.TELEGRAM_CHAT_ID,
 		googleSheetId: process.env.GOOGLE_SHEET_ID,
+		googleCredentialsJson: process.env.GOOGLE_CREDENTIALS_JSON,
 	},
 
 	// если вам нужно проксировать получение данных с элемента ( или любые другие ) - раскоментируйте код ниже и добавьте данные в env файл с ключом process.env.NUXT_PUBLIC_ELEMENT_HOST ⬇️

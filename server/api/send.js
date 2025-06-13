@@ -1,11 +1,9 @@
-import { google } from "googleapis";
 import { readFileSync } from "fs";
 import { join } from "path";
+import { google } from "googleapis";
 import { readBody, defineEventHandler, useRuntimeConfig } from "#imports";
 
-const credentials = JSON.parse(
-	readFileSync(join("server/googleapis.json"), "utf-8")
-);
+const credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS_JSON);
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event);
