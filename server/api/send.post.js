@@ -3,7 +3,8 @@ import { join } from "path";
 import { google } from "googleapis";
 import { readBody, defineEventHandler, useRuntimeConfig } from "#imports";
 
-const credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS_JSON);
+const config = useRuntimeConfig();
+const credentials = JSON.parse(config.googleCredentialsJson);
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event);
