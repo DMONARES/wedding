@@ -1,14 +1,20 @@
 // цвета
-$black: #282C34;
-$gray: #82868E;
-$lightGray: #E8E8E7;
-$red: #DC1020;
+$black: #282c34;
+$gray: #82868e;
+$lightGray: #e8e8e7;
+$red: #dc1020;
 $white: #ffffff;
 
+$base: #f9f7f4; //кремово-белый, фон),
+$surface: #efece7; //теплый слоновая кость, карточки),
+$accent: #d4c8bc; //бежево-серый, линии/разделители),
+$text: #2a2a2a; //глубокий графит, основной текст),
+$highlight: #8a6f8f; //приглушенный лавандовый, акценты/дата) :cite[2]
+
 // Разрешения
-$tablet : 768px;
+$tablet: 768px;
 $laptop: 1024px;
 $desktop: 1366px;
 
 // шрифты
-$firstFont: 'Inter', sans-serif;
+$firstFont: "Inter", sans-serif;
