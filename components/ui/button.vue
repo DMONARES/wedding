@@ -1,63 +1,55 @@
-<script setup>
-	const props = defineProps({
-		variant: String, // default, border
-		size: String, // default, xl
-		disabled: Boolean,
-	});
-</script>
-
 <template>
 	<button
-		class="ui-button"
-		:class="{
-			'border': variant === 'border',
-			'xl': size === 'xl',
-		}"
-		:disabled="disabled"
+		:class="['ui-button', `ui-button--${variant}`]"
+		@click="$emit('click')"
 	>
 		<slot />
 	</button>
 </template>
 
-<style lang='scss'>
-	.ui-button
-	{
-		// base styles
-		cursor: pointer;
-		border: none;
-		padding: 12px 24px;
-		border: 1px solid transparent;
-		border-radius: 4px;
-		background-color: $black;
-		color: $white;
-		font-size: 1rem;
+<script setup>
+defineProps({
+	variant: {
+		type: String,
+		default: "primary",
+		validator: (val) => ["primary", "secondary", "icon"].includes(val),
+	},
+});
 
-		@include transition();
+defineEmits(["click"]);
+</script>
 
-		// effects
-		&:disabled
-		{
-			pointer-events: none;
-			opacity: .7;
-		}
-		&:hover { opacity: .8; }
+<style lang="scss" scoped>
+.ui-button {
+	padding: 1rem 2rem;
+	border: none;
+	font-family: $firstFont;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	cursor: pointer;
+	@include smooth;
 
-		// sizes
-		&.xl { padding: 20px 64px; }
+	&--primary {
+		background: $highlight;
+		color: white;
 
-		// variants
-		&.border
-		{
-			background-color: transparent;
-			border-color: $black;
-			color: $black;
-
-			&:hover
-			{
-				opacity: 1;
-				background-color: $black;
-				color: $white;
-			}
+		&:hover {
+			background: adjust-color($surface, $lightness: -10%);
 		}
 	}
+
+	&--secondary {
+		background: $accent;
+		color: $text;
+	}
+
+	&--icon {
+		width: 3rem;
+		height: 3rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0;
+	}
+}
 </style>

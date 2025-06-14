@@ -47,6 +47,37 @@
 				<button class="button">Нажми меня</button>
 			</div>
 		</section>
+
+		<section class="section">
+			<h2 class="title title--xl mb-lg">UI Components</h2>
+
+			<div class="component-grid">
+				<div class="component-example">
+					<h3 class="title title--lg mb-md">Buttons</h3>
+					<div class="buttons-group">
+						<UiButton variant="primary">Primary</UiButton>
+						<UiButton variant="secondary">Secondary</UiButton>
+						<UiButton variant="icon">+</UiButton>
+					</div>
+				</div>
+
+				<div class="component-example">
+					<h3 class="title title--lg mb-md">Inputs</h3>
+					<UiInput
+						v-model="inputValue"
+						label="Name"
+						placeholder="Enter your name"
+					/>
+					<pre>Value: {{ inputValue }}</pre>
+				</div>
+
+				<div class="component-example">
+					<h3 class="title title--lg mb-md">Counter</h3>
+					<UiCounter v-model="counterValue" :min="0" :max="5" />
+					<pre>Value: {{ counterValue }}</pre>
+				</div>
+			</div>
+		</section>
 	</div>
 </template>
 
@@ -138,5 +169,24 @@ const typography = [
 	&:hover {
 		background: darken($highlight, 10%);
 	}
+}
+.component-grid {
+	display: grid;
+	gap: 3rem;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.buttons-group {
+	display: flex;
+	gap: 1rem;
+	flex-wrap: wrap;
+}
+
+pre {
+	margin-top: 1rem;
+	padding: 1rem;
+	background: $surface;
+	border: 1px solid $accent;
+	font-size: 0.875rem;
 }
 </style>

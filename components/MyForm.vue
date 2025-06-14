@@ -15,67 +15,61 @@
 					}`"
 					required
 					type="text"
+					class="guest-input__field"
 				/>
 				<button
 					v-if="index > 0"
 					type="button"
 					@click="removeGuest(index)"
-					class="remove-btn"
+					class="guest-input__remove"
 				>
 					×
 				</button>
 			</div>
 
-			<div class="counter-controls">
-				<button
-					type="button"
-					@click="decreaseGuests"
-					:disabled="guests.length <= 1"
-					class="counter-btn"
-				>
-					-
-				</button>
-				<span class="counter-display"
-					>{{ guests.length }} {{ getGuestWord(guests.length) }}</span
-				>
-				<button
-					type="button"
-					@click="increaseGuests"
-					class="counter-btn"
-				>
-					+
-				</button>
-			</div>
+			<UiCounter
+				:value="guests.length"
+				:min="1"
+				:max="10"
+				:disabled-plus="guests.length >= 10"
+				@increase="addGuest"
+				@decrease="removeLastGuest"
+			/>
 		</div>
 
-		<label>
-			Комментарий (необязательно):
-			<textarea v-model="message" />
-		</label>
+		<div class="form-group">
+			<label class="form-label">Комментарий (необязательно):</label>
+			<textarea v-model="message" class="form-textarea" />
+		</div>
 
-		<button type="submit" :disabled="loading">
+		<button type="submit" class="form-submit" :disabled="loading">
 			{{ loading ? "Отправка..." : "Отправить" }}
 		</button>
 
-		<p v-if="successMessage" class="success">{{ successMessage }}</p>
-		<p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+		<p v-if="successMessage" class="form-message form-message--success">
+			{{ successMessage }}
+		</p>
+		<p v-if="errorMessage" class="form-message form-message--error">
+			{{ errorMessage }}
+		</p>
 	</form>
 </template>
 
 <script setup>
 import { ref } from "vue";
-
 const guests = ref([{ name: "" }]);
 const message = ref("");
 const loading = ref(false);
 const successMessage = ref("");
 const errorMessage = ref("");
 
-const increaseGuests = () => {
-	guests.value.push({ name: "" });
+const addGuest = () => {
+	if (guests.value.length < 10) {
+		guests.value.push({ name: "" });
+	}
 };
 
-const decreaseGuests = () => {
+const removeLastGuest = () => {
 	if (guests.value.length > 1) {
 		guests.value.pop();
 	}
@@ -85,12 +79,6 @@ const removeGuest = (index) => {
 	if (guests.value.length > 1) {
 		guests.value.splice(index, 1);
 	}
-};
-
-const getGuestWord = (count) => {
-	if (count === 1) return "гость";
-	if (count >= 2 && count <= 4) return "гостя";
-	return "гостей";
 };
 
 const handleSubmit = async () => {
@@ -103,7 +91,7 @@ const handleSubmit = async () => {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({
-				guests: guests.value,
+				guests: guests.value.filter((g) => g.name.trim() !== ""),
 				message: message.value,
 			}),
 		});
@@ -125,135 +113,124 @@ const handleSubmit = async () => {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+/* Стили остаются без изменений */
 .form {
 	display: flex;
 	flex-direction: column;
-	gap: 20px;
+	gap: 2rem;
 	max-width: 500px;
 	margin: 0 auto;
+	padding: 2rem;
+	background: $surface;
+	border: 1px solid $accent;
 }
 
 .guests-section {
 	display: flex;
 	flex-direction: column;
-	gap: 12px;
+	gap: 1rem;
 }
 
 .section-title {
-	font-weight: bold;
-	font-size: 16px;
+	font-weight: 700;
+	font-size: 1.125rem;
+	color: $text;
 }
 
 .guest-input {
 	display: flex;
 	align-items: center;
-	gap: 8px;
+	gap: 0.5rem;
+
+	&__field {
+		flex: 1;
+		padding: 0.75rem;
+		border: 1px solid $accent;
+		background: $base;
+		font-family: $firstFont;
+		@include smooth;
+
+		&:focus {
+			outline: none;
+			border-color: $highlight;
+		}
+	}
+
+	&__remove {
+		width: 2rem;
+		height: 2rem;
+		border: 1px solid $red;
+		background: $red;
+		color: white;
+		font-size: 1rem;
+		font-weight: 700;
+		cursor: pointer;
+		@include smooth;
+
+		&:hover {
+			background: darken($red, 10%);
+		}
+	}
 }
 
-.guest-input input {
-	flex: 1;
-	padding: 10px;
-	border-radius: 8px;
-	border: 1px solid #ccc;
-	font-family: inherit;
-	font-size: 16px;
-}
-
-.remove-btn {
-	width: 32px;
-	height: 32px;
-	border-radius: 50%;
-	border: 1px solid #ff4444;
-	background: #ff4444;
-	color: white;
-	font-size: 18px;
-	font-weight: bold;
-	cursor: pointer;
+.form-group {
 	display: flex;
-	align-items: center;
-	justify-content: center;
-	transition: background 0.2s ease;
+	flex-direction: column;
+	gap: 0.5rem;
 }
 
-.remove-btn:hover {
-	background: #cc3333;
+.form-label {
+	font-weight: 500;
+	color: $text;
 }
 
-.counter-controls {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 16px;
-	margin-top: 8px;
-}
-
-.counter-btn {
-	width: 40px;
-	height: 40px;
-	border-radius: 50%;
-	border: 2px solid #2f3e46;
-	background: white;
-	color: #2f3e46;
-	font-size: 20px;
-	font-weight: bold;
-	cursor: pointer;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	transition: all 0.2s ease;
-}
-
-.counter-btn:hover:not(:disabled) {
-	background: #2f3e46;
-	color: white;
-}
-
-.counter-btn:disabled {
-	opacity: 0.5;
-	cursor: not-allowed;
-}
-
-.counter-display {
-	font-weight: bold;
-	font-size: 16px;
-	min-width: 100px;
-	text-align: center;
-}
-
-textarea {
-	padding: 10px;
-	border-radius: 8px;
-	border: 1px solid #ccc;
-	font-family: inherit;
-	font-size: 16px;
-	min-height: 80px;
+.form-textarea {
+	padding: 0.75rem;
+	min-height: 6rem;
+	border: 1px solid $accent;
+	background: $base;
+	font-family: $firstFont;
 	resize: vertical;
+	@include smooth;
+
+	&:focus {
+		outline: none;
+		border-color: $highlight;
+	}
 }
 
-button[type="submit"] {
-	padding: 12px;
-	background-color: #2f3e46;
+.form-submit {
+	padding: 1rem;
+	background: $highlight;
 	color: white;
-	font-weight: bold;
 	border: none;
-	border-radius: 10px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
 	cursor: pointer;
-	transition: background 0.2s ease;
+	@include smooth;
+
+	&:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+
+	&:hover:not(:disabled) {
+		background: darken($highlight, 10%);
+	}
 }
 
-button[type="submit"]:disabled {
-	background: #aaa;
-	cursor: not-allowed;
-}
+.form-message {
+	font-weight: 500;
+	text-align: center;
 
-.success {
-	color: green;
-	font-weight: bold;
-}
+	&--success {
+		color: darken(green, 10%);
+	}
 
-.error {
-	color: red;
-	font-weight: bold;
+	&--error {
+		color: $red;
+	}
 }
 </style>
