@@ -2,9 +2,9 @@
 
 <template>
 	<div>
-		<!-- <YandexMap /> -->
-		<MyForm />
-		 <!-- <Timer /> -->
+		<YandexMap style="margin-top: 30px;"  />
+		<MyForm style="margin-top: 30px;" />
+		 <Timer style="margin-top: 30px;" />
 	</div>
 </template>
 
