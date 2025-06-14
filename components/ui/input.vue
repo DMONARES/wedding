@@ -37,10 +37,6 @@
 				</span>
 			</div>
 
-			<div v-if="$slots.suffix" class="ui-input__suffix">
-				<slot name="suffix"></slot>
-			</div>
-
 			<button
 				v-if="variant === 'removable'"
 				type="button"
@@ -155,13 +151,6 @@ const handleBlur = () => {
 			top: 0;
 			transform: translateY(-50%);
 		}
-	}
-
-	&__suffix {
-		position: absolute;
-		right: 16px;
-		top: 50%;
-		transform: translateY(-50%);
 	}
 
 	&__remove-btn {

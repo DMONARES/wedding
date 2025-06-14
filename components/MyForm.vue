@@ -9,9 +9,7 @@
 				<div class="guest-input-container">
 					<UiInput
 						v-model="guest.name"
-						:placeholder="`Имя гостя ${index + 1}${
-							index === 0 ? ' (основной)' : ''
-						}`"
+						:placeholder="index === 0 ? 'Ваше ФИО' : 'ФИО гостя'"
 						class="guest-input"
 						:variant="index === 0 ? 'default' : 'removable'"
 						@remove="removeGuest(index)"
@@ -34,9 +32,9 @@
 				type="textarea"
 			/>
 		</div>
-		<button type="submit" class="form-submit" :disabled="loading">
+		<UiButton type="submit" class="form-submit" :disabled="loading">
 			{{ loading ? "Отправка..." : "Отправить" }}
-		</button>
+		</UiButton>
 		<div v-if="successMessage" class="form-message form-message--success">
 			{{ successMessage }}
 		</div>
