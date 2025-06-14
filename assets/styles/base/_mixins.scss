@@ -1,17 +1,19 @@
-@mixin mq($from, $to: false) {
-	@if $to {
-		@media (min-width: ($from + 0px)) and (max-width: ($to + 0px)) {
-			@content;
-		}
+@mixin tablet {
+	@media (min-width: $tablet) {
+		@content;
 	}
-
-	@else {
-		@media (min-width: ($from + 0px)) {
-			@content;
-		}
+}
+@mixin laptop {
+	@media (min-width: $laptop) {
+		@content;
+	}
+}
+@mixin desktop {
+	@media (min-width: $desktop) {
+		@content;
 	}
 }
 
-@mixin transition() {
-	transition: .2s ease;
+@mixin smooth($property: all, $duration: 0.4s) {
+	transition: $property $duration cubic-bezier(0.77, 0, 0.175, 1);
 }

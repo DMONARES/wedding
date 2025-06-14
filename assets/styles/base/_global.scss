@@ -1,6 +1,106 @@
-.g-h1
-{
-    margin-bottom: 25px;
-    font-size: 3.5rem;
-    text-align: center;
+// assets/styles/base/_typography.scss
+
+// Заголовки (стиль Six Senses)
+.title {
+	font-family: $firstFont;
+	font-weight: 700;
+	color: $text;
+	line-height: 1.1;
+	text-transform: uppercase;
+	margin-bottom: 1.5rem;
+
+	&--xxl {
+		font-size: clamp(3.5rem, 8vw, 7rem);
+		letter-spacing: -0.03em;
+	}
+
+	&--xl {
+		font-size: clamp(2.5rem, 6vw, 4rem);
+	}
+
+	&--lg {
+		font-size: clamp(2rem, 5vw, 3rem);
+	}
+
+	&--highlight {
+		color: $highlight;
+	}
+}
+
+// Основной текст
+.text {
+	font-family: $firstFont;
+	font-weight: 400;
+	color: $text;
+	line-height: 1.6;
+
+	&--lead {
+		font-size: clamp(1.25rem, 2vw, 1.5rem);
+		font-weight: 350;
+	}
+
+	&--md {
+		font-size: 1.125rem;
+	}
+
+	&--sm {
+		font-size: 1rem;
+	}
+
+	&--light {
+		color: $gray;
+	}
+
+	&--uppercase {
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+	}
+}
+
+// Специальные элементы
+.date {
+	font-family: $firstFont;
+	font-size: clamp(1.5rem, 3vw, 2rem);
+	color: $highlight;
+	letter-spacing: 0.1em;
+}
+
+.divider {
+	height: 1px;
+	width: 100%;
+	background: $accent;
+	margin: 2rem 0;
+	opacity: 0.3;
+}
+
+// assets/styles/base/_utilities.scss
+
+// Отступы
+.mb {
+	&-xl {
+		margin-bottom: 4rem;
+	}
+	&-lg {
+		margin-bottom: 2.5rem;
+	}
+	&-md {
+		margin-bottom: 1.5rem;
+	}
+}
+
+// Выравнивание
+.text {
+	&-center {
+		text-align: center;
+	}
+	&-right {
+		text-align: right;
+	}
+}
+
+// Визуальные эффекты
+.shadow {
+	&-soft {
+		box-shadow: 0 4px 20px rgba($text, 0.05);
+	}
 }
