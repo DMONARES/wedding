@@ -1,32 +1,34 @@
 <template>
-	<div class="timer">
-		<div
-			v-for="(item, idx) in timeParts"
-			:key="item.label"
-			class="timer-part"
-		>
-			<div class="digits">
-				<transition name="digit-flip" mode="out-in">
-					<span
-						class="digit-box"
-						:key="item.value[0] + '-left-' + item.label"
-					>
-						{{ item.value[0] }}
-					</span>
-				</transition>
-				<span class="digit-separator"></span>
-				<transition name="digit-flip" mode="out-in">
-					<span
-						class="digit-box"
-						:key="item.value[1] + '-right-' + item.label"
-					>
-						{{ item.value[1] }}
-					</span>
-				</transition>
+	<client-only>
+		<div class="timer">
+			<div
+				v-for="(item, idx) in timeParts"
+				:key="item.label"
+				class="timer-part"
+			>
+				<div class="digits">
+					<transition name="digit-flip" mode="out-in">
+						<span
+							class="digit-box"
+							:key="item.value[0] + '-left-' + item.label"
+						>
+							{{ item.value[0] }}
+						</span>
+					</transition>
+					<span class="digit-separator"></span>
+					<transition name="digit-flip" mode="out-in">
+						<span
+							class="digit-box"
+							:key="item.value[1] + '-right-' + item.label"
+						>
+							{{ item.value[1] }}
+						</span>
+					</transition>
+				</div>
+				<span class="label">{{ item.label }}</span>
 			</div>
-			<span class="label">{{ item.label }}</span>
 		</div>
-	</div>
+	</client-only>
 </template>
 
 <script setup>
@@ -92,7 +94,7 @@ onUnmounted(() => clearInterval(timer));
 	background: #000;
 	font-size: 2rem;
 	font-weight: bold;
-	color: #FFF;
+	color: #fff;
 	margin: 0;
 	text-align: center;
 	line-height: 48px;
@@ -105,7 +107,7 @@ onUnmounted(() => clearInterval(timer));
 	position: relative;
 
 	&:after {
-		content: '';
+		content: "";
 		position: absolute;
 		top: 0;
 		bottom: 0;

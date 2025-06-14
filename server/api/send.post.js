@@ -78,7 +78,8 @@ ${guestsList}
 		await formatGoogleSheet(
 			sheets,
 			config.googleSheetId,
-			appendResult.data.updates.updatedRange
+			appendResult.data.updates.updatedRange,
+			guests.length
 		);
 	} catch (err) {
 		console.error(
@@ -92,9 +93,14 @@ ${guestsList}
 
 /**
  * Функция для форматирования Google Sheets
- * Применяет чередующиеся цвета фона и жирный шрифт для основных гостей
+ * Применяет чередующиеся цвета фона и жирный шрифт только для имен основных гостей
  */
-async function formatGoogleSheet(sheets, spreadsheetId, updatedRange) {
+async function formatGoogleSheet(
+	sheets,
+	spreadsheetId,
+	updatedRange,
+	guestsCount
+) {
 	try {
 		// Извлекаем номера строк из updatedRange (например, "Лист1!A2:C4")
 		const rangeMatch = updatedRange.match(/!A(\d+):C(\d+)/);
@@ -103,16 +109,36 @@ async function formatGoogleSheet(sheets, spreadsheetId, updatedRange) {
 		const startRow = parseInt(rangeMatch[1]) - 1; // Google Sheets API использует 0-based индексы
 		const endRow = parseInt(rangeMatch[2]) - 1;
 
+		// Получаем общее количество строк в таблице для определения цвета группы
+		const allDataResponse = await sheets.spreadsheets.values.get({
+			spreadsheetId: spreadsheetId,
+			range: "A:C",
+		});
+
+		const allRows = allDataResponse.data.values || [];
+		const totalRowsBeforeInsert = allRows.length - guestsCount;
+
+		// Определяем, какой цвет должен быть у этой группы (чередование групп)
+		let groupNumber = 0;
+		for (let i = 1; i < totalRowsBeforeInsert; i++) {
+			// Начинаем с 1, чтобы пропустить заголовок
+			if (allRows[i] && allRows[i][1] && !isNaN(allRows[i][1])) {
+				groupNumber++;
+			}
+		}
+
+		// Определяем цвет для текущей группы (четные - голубой, нечетные - белый)
+		const isBlueGroup = groupNumber % 2 === 0;
+		const backgroundColor = isBlueGroup
+			? { red: 0.8, green: 0.9, blue: 1.0 } // Светло-голубой
+			: { red: 1.0, green: 1.0, blue: 1.0 }; // Белый
+
 		const requests = [];
-		let isMainGuest = true;
-		let currentBackgroundColor = { red: 0.8, green: 0.9, blue: 1.0 }; // Светло-голубой
 
 		for (let row = startRow; row <= endRow; row++) {
-			// Определяем цвет фона и нужно ли делать жирным
-			const backgroundColor = currentBackgroundColor;
-			const isBold = isMainGuest;
+			const isMainGuest = row === startRow; // Только первая строка группы - основной гость
 
-			// Форматируем всю строку
+			// Форматируем колонку A (имя) - жирным только для основного гостя
 			requests.push({
 				repeatCell: {
 					range: {
@@ -120,13 +146,13 @@ async function formatGoogleSheet(sheets, spreadsheetId, updatedRange) {
 						startRowIndex: row,
 						endRowIndex: row + 1,
 						startColumnIndex: 0,
-						endColumnIndex: 3,
+						endColumnIndex: 1,
 					},
 					cell: {
 						userEnteredFormat: {
 							backgroundColor: backgroundColor,
 							textFormat: {
-								bold: isBold,
+								bold: isMainGuest, // Жирным только основного гостя
 							},
 						},
 					},
@@ -134,33 +160,27 @@ async function formatGoogleSheet(sheets, spreadsheetId, updatedRange) {
 				},
 			});
 
-			// Проверяем, является ли следующая строка основным гостем
-			// (если в колонке B есть число, то это основной гость)
-			if (row < endRow) {
-				// Получаем данные следующей строки для проверки
-				const nextRowData = await sheets.spreadsheets.values.get({
-					spreadsheetId: spreadsheetId,
-					range: `Лист1!B${row + 2}:B${row + 2}`,
-				});
-
-				const nextRowHasCount =
-					nextRowData.data.values &&
-					nextRowData.data.values[0] &&
-					nextRowData.data.values[0][0] &&
-					!isNaN(nextRowData.data.values[0][0]);
-
-				if (nextRowHasCount) {
-					// Следующая строка - основной гость, меняем цвет
-					isMainGuest = true;
-					currentBackgroundColor =
-						currentBackgroundColor.red === 1
-							? { red: 0.8, green: 0.9, blue: 1.0 } // Светло-голубой
-							: { red: 1.0, green: 1.0, blue: 1.0 }; // Белый
-				} else {
-					// Следующая строка - дополнительный гость
-					isMainGuest = false;
-				}
-			}
+			// Форматируем колонки B и C (количество и комментарий) - обычным шрифтом
+			requests.push({
+				repeatCell: {
+					range: {
+						sheetId: 0,
+						startRowIndex: row,
+						endRowIndex: row + 1,
+						startColumnIndex: 1,
+						endColumnIndex: 3,
+					},
+					cell: {
+						userEnteredFormat: {
+							backgroundColor: backgroundColor,
+							textFormat: {
+								bold: false, // Всегда обычный шрифт
+							},
+						},
+					},
+					fields: "userEnteredFormat(backgroundColor,textFormat)",
+				},
+			});
 		}
 
 		// Применяем форматирование
@@ -174,5 +194,66 @@ async function formatGoogleSheet(sheets, spreadsheetId, updatedRange) {
 		}
 	} catch (error) {
 		console.error("Ошибка при форматировании Google Sheets:", error);
+	}
+}
+
+/**
+ * Функция для обновления формулы подсчета гостей
+ */
+async function updateGuestCountFormula(sheets, spreadsheetId) {
+	try {
+		// Находим первую пустую строку в колонке A
+		const response = await sheets.spreadsheets.values.get({
+			spreadsheetId: spreadsheetId,
+			range: "A:A",
+		});
+
+		const values = response.data.values || [];
+		const lastRow = values.length + 2; // +2 для отступа
+
+		// Добавляем формулу для подсчета общего количества гостей
+		await sheets.spreadsheets.values.update({
+			spreadsheetId: spreadsheetId,
+			range: `A${lastRow}:B${lastRow}`,
+			valueInputOption: "USER_ENTERED",
+			resource: {
+				values: [["ИТОГО ГОСТЕЙ:", "=СУММ(B:B)"]],
+			},
+		});
+
+		// Форматируем итоговую строку (жирный шрифт, желтый фон)
+		await sheets.spreadsheets.batchUpdate({
+			spreadsheetId: spreadsheetId,
+			resource: {
+				requests: [
+					{
+						repeatCell: {
+							range: {
+								sheetId: 0,
+								startRowIndex: lastRow - 1,
+								endRowIndex: lastRow,
+								startColumnIndex: 0,
+								endColumnIndex: 2,
+							},
+							cell: {
+								userEnteredFormat: {
+									backgroundColor: {
+										red: 1.0,
+										green: 1.0,
+										blue: 0.8,
+									}, // Светло-желтый
+									textFormat: {
+										bold: true,
+									},
+								},
+							},
+							fields: "userEnteredFormat(backgroundColor,textFormat)",
+						},
+					},
+				],
+			},
+		});
+	} catch (error) {
+		console.error("Ошибка при добавлении формулы подсчета:", error);
 	}
 }

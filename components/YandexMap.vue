@@ -40,13 +40,13 @@ onMounted(() => {
 <style lang="scss">
 .map-wrapper {
 	width: 100%;
-	max-width: 900px;
+	max-width: 300px;
 	margin: 0 auto;
 	padding: 20px 0;
 }
 
 .map-container {
-	height: 300px;
+	height: 500px;
 	width: 100%;
 	border-radius: 16px;
 	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
