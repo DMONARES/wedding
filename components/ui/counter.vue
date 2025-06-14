@@ -2,18 +2,22 @@
 	<div class="ui-counter">
 		<button
 			class="ui-counter__button"
-			@click="$emit('increase')"
-			:disabled="disabledPlus"
-		>
-			+
-		</button>
-		<span class="ui-counter__value">{{ value }} {{ guestWord }}</span>
-		<button
-			class="ui-counter__button"
 			@click="$emit('decrease')"
 			:disabled="value <= min"
+			type="button"
 		>
 			−
+		</button>
+		<div class="ui-counter__value">
+			{{ value }}
+		</div>
+		<button
+			class="ui-counter__button"
+			@click="$emit('increase')"
+			:disabled="disabledPlus"
+			type="button"
+		>
+			+
 		</button>
 	</div>
 </template>
@@ -39,13 +43,6 @@ const props = defineProps({
 });
 
 defineEmits(["increase", "decrease"]);
-
-const guestWord = computed(() => {
-	const count = props.value;
-	if (count === 1) return "гость";
-	if (count >= 2 && count <= 4) return "гостя";
-	return "гостей";
-});
 </script>
 
 <style lang="scss" scoped>
@@ -56,29 +53,45 @@ const guestWord = computed(() => {
 	margin-top: 1rem;
 
 	&__button {
-		width: 2.5rem;
-		height: 2.5rem;
+		width: 3rem;
+		height: 3rem;
 		background: $surface;
 		border: 1px solid $accent;
-		font-size: 1.25rem;
+		font-size: 1.5rem;
+		font-weight: 500;
+		color: $text;
 		cursor: pointer;
-		@include smooth;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: all 0.2s ease;
+		font-family: $firstFont;
 
 		&:hover:not(:disabled) {
 			background: $highlight;
-			color: white;
+			color: $white;
+			border-color: $highlight;
 		}
 
 		&:disabled {
 			opacity: 0.5;
 			cursor: not-allowed;
+			color: $gray;
 		}
 	}
 
 	&__value {
-		min-width: 6rem;
-		text-align: center;
+		width: 3rem;
+		height: 3rem;
+		background: $surface;
+		border: 1px solid $accent;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 1.125rem;
 		font-weight: 500;
+		color: $text;
+		font-family: $firstFont;
 	}
 }
 </style>

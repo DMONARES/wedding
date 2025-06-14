@@ -1,8 +1,6 @@
 <template>
 	<form @submit.prevent="handleSubmit" class="form">
 		<div class="guests-section">
-			<label class="section-title">Гости:</label>
-
 			<div
 				v-for="(guest, index) in guests"
 				:key="index"
@@ -15,21 +13,11 @@
 							index === 0 ? ' (основной)' : ''
 						}`"
 						class="guest-input"
-						:class="{ 'has-remove': index > 0 }"
-					>
-						<template v-if="index > 0" #suffix>
-							<button
-								type="button"
-								@click.stop="removeGuest(index)"
-								class="guest-input__remove"
-							>
-								—
-							</button>
-						</template>
-					</UiInput>
+						:variant="index === 0 ? 'default' : 'removable'"
+						@remove="removeGuest(index)"
+					/>
 				</div>
 			</div>
-
 			<UiCounter
 				:value="guests.length"
 				:min="1"
@@ -39,19 +27,16 @@
 				@decrease="removeLastGuest"
 			/>
 		</div>
-
 		<div class="form-group">
 			<UiInput
 				v-model="message"
-				placeholder="Комментарий (необязательно)"
+				placeholder="Комментарий"
 				type="textarea"
 			/>
 		</div>
-
 		<button type="submit" class="form-submit" :disabled="loading">
-			{{ loading ? "Отправка..." : "Подтвердить присутствие" }}
+			{{ loading ? "Отправка..." : "Отправить" }}
 		</button>
-
 		<div v-if="successMessage" class="form-message form-message--success">
 			{{ successMessage }}
 		</div>
@@ -183,7 +168,6 @@ const handleSubmit = async () => {
 	color: white;
 	border: none;
 	font-weight: 700;
-	text-transform: uppercase;
 	letter-spacing: 0.05em;
 	cursor: pointer;
 	@include smooth;
