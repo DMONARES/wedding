@@ -41,7 +41,7 @@ const props = defineProps({
 defineEmits(["increase", "decrease"]);
 
 const guestWord = computed(() => {
-	const count = props.value; // Используем props.value
+	const count = props.value;
 	if (count === 1) return "гость";
 	if (count >= 2 && count <= 4) return "гостя";
 	return "гостей";

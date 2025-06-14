@@ -6,25 +6,28 @@
 			<div
 				v-for="(guest, index) in guests"
 				:key="index"
-				class="guest-input"
+				class="guest-input-wrapper"
 			>
-				<input
-					v-model="guest.name"
-					:placeholder="`Имя гостя ${index + 1}${
-						index === 0 ? ' (основной)' : ''
-					}`"
-					required
-					type="text"
-					class="guest-input__field"
-				/>
-				<button
-					v-if="index > 0"
-					type="button"
-					@click="removeGuest(index)"
-					class="guest-input__remove"
-				>
-					×
-				</button>
+				<div class="guest-input-container">
+					<UiInput
+						v-model="guest.name"
+						:placeholder="`Имя гостя ${index + 1}${
+							index === 0 ? ' (основной)' : ''
+						}`"
+						class="guest-input"
+						:class="{ 'has-remove': index > 0 }"
+					>
+						<template v-if="index > 0" #suffix>
+							<button
+								type="button"
+								@click.stop="removeGuest(index)"
+								class="guest-input__remove"
+							>
+								—
+							</button>
+						</template>
+					</UiInput>
+				</div>
 			</div>
 
 			<UiCounter
@@ -38,30 +41,28 @@
 		</div>
 
 		<div class="form-group">
-			<label class="form-label">Комментарий (необязательно):</label>
-			<textarea v-model="message" class="form-textarea" />
+			<UiInput
+				v-model="message"
+				placeholder="Комментарий (необязательно)"
+				type="textarea"
+			/>
 		</div>
 
 		<button type="submit" class="form-submit" :disabled="loading">
-			{{ loading ? "Отправка..." : "Отправить" }}
+			{{ loading ? "Отправка..." : "Подтвердить присутствие" }}
 		</button>
 
-		<p v-if="successMessage" class="form-message form-message--success">
+		<div v-if="successMessage" class="form-message form-message--success">
 			{{ successMessage }}
-		</p>
-		<p v-if="errorMessage" class="form-message form-message--error">
-			{{ errorMessage }}
-		</p>
+		</div>
 	</form>
 </template>
 
 <script setup>
-import { ref } from "vue";
 const guests = ref([{ name: "" }]);
 const message = ref("");
 const loading = ref(false);
 const successMessage = ref("");
-const errorMessage = ref("");
 
 const addGuest = () => {
 	if (guests.value.length < 10) {
@@ -84,28 +85,34 @@ const removeGuest = (index) => {
 const handleSubmit = async () => {
 	loading.value = true;
 	successMessage.value = "";
-	errorMessage.value = "";
+
+	// Удаляем пустые поля гостей (кроме основного)
+	const cleanedGuests = [
+		guests.value[0],
+		...guests.value.slice(1).filter((g) => g.name.trim() !== ""),
+	];
+
+	// Проверка основного гостя
+	if (!cleanedGuests[0]?.name?.trim()) {
+		loading.value = false;
+		return;
+	}
 
 	try {
-		const res = await fetch("/api/send", {
+		const res = await $fetch("/api/send", {
 			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({
-				guests: guests.value.filter((g) => g.name.trim() !== ""),
+			body: {
+				guests: cleanedGuests,
 				message: message.value,
-			}),
+			},
 		});
 
-		const data = await res.json();
-		if (data.ok) {
-			successMessage.value = "Спасибо! Заявка отправлена 💌";
+		if (res.ok) {
+			successMessage.value = "Ваше присутствие подтверждено! Ждём вас ❤️";
 			guests.value = [{ name: "" }];
 			message.value = "";
-		} else {
-			throw new Error(data.error || "Ошибка отправки");
 		}
 	} catch (err) {
-		errorMessage.value = "Ошибка при отправке. Попробуйте позже.";
 		console.error(err);
 	} finally {
 		loading.value = false;
@@ -114,7 +121,6 @@ const handleSubmit = async () => {
 </script>
 
 <style lang="scss" scoped>
-/* Стили остаются без изменений */
 .form {
 	display: flex;
 	flex-direction: column;
@@ -136,67 +142,38 @@ const handleSubmit = async () => {
 	font-weight: 700;
 	font-size: 1.125rem;
 	color: $text;
+	margin-bottom: 0.5rem;
 }
 
-.guest-input {
+.guest-input-container {
+	position: relative;
+}
+
+:deep(.guest-input.has-remove) {
+	.ui-input__field {
+		padding-right: 3rem;
+	}
+}
+
+.guest-input__remove {
+	position: absolute;
+	right: 1rem;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 1.5rem;
+	height: 1.5rem;
 	display: flex;
 	align-items: center;
-	gap: 0.5rem;
-
-	&__field {
-		flex: 1;
-		padding: 0.75rem;
-		border: 1px solid $accent;
-		background: $base;
-		font-family: $firstFont;
-		@include smooth;
-
-		&:focus {
-			outline: none;
-			border-color: $highlight;
-		}
-	}
-
-	&__remove {
-		width: 2rem;
-		height: 2rem;
-		border: 1px solid $red;
-		background: $red;
-		color: white;
-		font-size: 1rem;
-		font-weight: 700;
-		cursor: pointer;
-		@include smooth;
-
-		&:hover {
-			background: darken($red, 10%);
-		}
-	}
-}
-
-.form-group {
-	display: flex;
-	flex-direction: column;
-	gap: 0.5rem;
-}
-
-.form-label {
-	font-weight: 500;
-	color: $text;
-}
-
-.form-textarea {
-	padding: 0.75rem;
-	min-height: 6rem;
-	border: 1px solid $accent;
-	background: $base;
-	font-family: $firstFont;
-	resize: vertical;
+	justify-content: center;
+	background: none;
+	border: none;
+	color: $gray;
+	font-size: 1.2rem;
+	cursor: pointer;
 	@include smooth;
 
-	&:focus {
-		outline: none;
-		border-color: $highlight;
+	&:hover {
+		color: $red;
 	}
 }
 
@@ -224,13 +201,12 @@ const handleSubmit = async () => {
 .form-message {
 	font-weight: 500;
 	text-align: center;
+	padding: 1rem;
+	margin-top: 1rem;
 
 	&--success {
-		color: darken(green, 10%);
-	}
-
-	&--error {
-		color: $red;
+		color: $highlight;
+		background: rgba($highlight, 0.1);
 	}
 }
 </style>

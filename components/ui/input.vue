@@ -1,13 +1,26 @@
 <template>
 	<div class="ui-input">
 		<label v-if="label" class="ui-input__label">{{ label }}</label>
-		<input
-			:type="type"
-			:placeholder="placeholder"
-			class="ui-input__field"
-			:value="modelValue"
-			@input="$emit('update:modelValue', $event.target.value)"
-		/>
+		<div class="ui-input__container">
+			<input
+				v-if="type !== 'textarea'"
+				:type="type"
+				:placeholder="placeholder"
+				class="ui-input__field"
+				:value="modelValue"
+				@input="$emit('update:modelValue', $event.target.value)"
+			/>
+			<textarea
+				v-else
+				:placeholder="placeholder"
+				class="ui-input__field"
+				:value="modelValue"
+				@input="$emit('update:modelValue', $event.target.value)"
+			></textarea>
+			<div v-if="$slots.suffix" class="ui-input__suffix">
+				<slot name="suffix"></slot>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -36,6 +49,10 @@ defineEmits(["update:modelValue"]);
 		color: $text;
 	}
 
+	&__container {
+		position: relative;
+	}
+
 	&__field {
 		width: 100%;
 		padding: 1rem;
@@ -48,6 +65,13 @@ defineEmits(["update:modelValue"]);
 			outline: none;
 			border-color: $highlight;
 		}
+	}
+
+	&__suffix {
+		position: absolute;
+		right: 1rem;
+		top: 50%;
+		transform: translateY(-50%);
 	}
 }
 </style>
