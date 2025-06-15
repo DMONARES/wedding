@@ -14,6 +14,7 @@ onMounted(() => {
 
 	<div v-else class="main-content">
 		<HeroSection />
+		<StorySection />
 		<div id="content-section" class="content-container">
 			<MyForm />
 		</div>
