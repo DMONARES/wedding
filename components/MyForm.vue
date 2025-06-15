@@ -53,7 +53,7 @@
 			<div class="form-group">
 				<UiInput
 					v-model="message"
-					placeholder="Комментарий или пожелания"
+					placeholder="Комментарий"
 					type="textarea"
 				/>
 			</div>
@@ -137,15 +137,22 @@ const handleSubmit = async () => {
 	}
 
 	try {
-		// Эмуляция отправки (в реальном коде здесь будет запрос)
-		await new Promise((resolve) => setTimeout(resolve, 1000));
+		const res = await $fetch("/api/send", {
+			method: "POST",
+			body: {
+				guests: cleanedGuests,
+				message: message.value,
+			},
+		});
 
-		successMessage.value = "Ваше присутствие подтверждено!";
-		startCountdown();
+		if (res.ok) {
+			successMessage.value = "Ваше присутствие подтверждено! Ждём вас ❤️";
+			startCountdown();
 
-		// Очищаем форму: оставляем только первого гостя и очищаем его, а также сообщение
-		guests.value = [{ name: "" }];
-		message.value = "";
+			// Очищаем форму
+			guests.value = [{ name: "" }];
+			message.value = "";
+		}
 	} catch (err) {
 		console.error(err);
 	} finally {
@@ -244,7 +251,6 @@ const handleSubmit = async () => {
 }
 
 .guests-list {
-	padding-top: 10px;
 	max-height: 50vh;
 	overflow-y: auto;
 	padding-right: 0.5rem;
