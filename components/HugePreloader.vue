@@ -1,8 +1,8 @@
 <template>
 	<ClientOnly>
-		<!-- Показываем overlay только пока show = true -->
 		<div v-if="show" ref="overlayRef" class="preloader-overlay">
 			<svg
+				ref="svgRef"
 				viewBox="0 0 200 200"
 				xmlns="http://www.w3.org/2000/svg"
 				class="preloader-svg"
@@ -27,28 +27,43 @@ import gsap from "gsap";
 
 const strokeWidth = 2;
 const pathRef = ref<SVGPathElement | null>(null);
+const svgRef = ref<SVGSVGElement | null>(null); // Добавляем ref для SVG
 const overlayRef = ref<HTMLElement | null>(null);
 const show = ref(true);
 
 onMounted(async () => {
 	await nextTick();
 	const pathEl = pathRef.value;
-	if (!pathEl) return;
+	const svgEl = svgRef.value; // Получаем элемент SVG
 
-	// Добавляем задержку для iOS Safari
+	if (!pathEl || !svgEl) return;
+
+	// Таймаут для аварийного скрытия
+	const fallbackTimeout = setTimeout(() => {
+		show.value = false;
+	}, 8000);
+
+	// Увеличиваем задержку для iOS до 300мс
 	setTimeout(() => {
 		try {
 			const length = pathEl.getTotalLength();
+
+			// Принудительный рефлоу перед началом анимации
+			void pathEl.offsetHeight;
+
 			if (length && length > 0) {
 				pathEl.style.strokeDasharray = `${length}`;
 				pathEl.style.strokeDashoffset = `${length}`;
-				pathEl.style.visibility = "visible";
+
+				// Заменяем visibility на opacity
+				svgEl.style.opacity = "1";
 
 				gsap.to(pathEl, {
 					strokeDashoffset: 0,
 					duration: 5,
 					ease: "power1.inOut",
 					onComplete() {
+						clearTimeout(fallbackTimeout);
 						const ov = overlayRef.value;
 						if (ov) {
 							gsap.to(ov, {
@@ -65,20 +80,22 @@ onMounted(async () => {
 					},
 				});
 			} else {
-				// Fallback если getTotalLength не работает
-				pathEl.style.visibility = "visible";
+				// Фолбэк
+				svgEl.style.opacity = "1";
 				setTimeout(() => {
 					show.value = false;
+					clearTimeout(fallbackTimeout);
 				}, 2000);
 			}
 		} catch (error) {
-			// Fallback для ошибок
-			pathEl.style.visibility = "visible";
+			// Фолбэк при ошибке
+			svgEl.style.opacity = "1";
 			setTimeout(() => {
 				show.value = false;
+				clearTimeout(fallbackTimeout);
 			}, 2000);
 		}
-	}, 100);
+	}, 300); // Увеличенная задержка для iOS
 });
 </script>
 
@@ -95,34 +112,44 @@ onMounted(async () => {
 	background: #fff;
 	z-index: 99999;
 	opacity: 1;
+	-webkit-backface-visibility: hidden; /* Фикс для Safari */
 }
 
 .preloader-svg {
 	width: 60%;
 	height: auto;
 	color: #000;
-	visibility: hidden;
+	opacity: 0; /* Заменяем visibility на opacity */
 	overflow: visible;
-	/* Принудительно включаем аппаратное ускорение для iOS */
 	transform: translateZ(0);
 	-webkit-transform: translateZ(0);
+	-webkit-font-smoothing: antialiased; /* Улучшение рендеринга */
+	backface-visibility: hidden; /* Фикс артефактов */
+	will-change: opacity, transform; /* Оптимизация анимации */
+}
 
-	@include tablet {
-		width: 50%;
-	}
-
-	@include laptop {
-		width: 40%;
-	}
-
-	@include desktop {
-		width: 35%;
+/* Фикс для Safari */
+@supports (-webkit-touch-callout: none) {
+	.preloader-svg {
+		-webkit-transform: translate3d(0, 0, 0);
+		transform: translate3d(0, 0, 0);
 	}
 }
 
-/* Дополнительные стили для iOS Safari */
 .preloader-svg path {
 	transform: translateZ(0);
 	-webkit-transform: translateZ(0);
+	will-change: stroke-dashoffset, stroke-dasharray; /* Оптимизация анимации */
+}
+
+/* Медиа-запросы остаются без изменений */
+@include tablet {
+	width: 50%;
+}
+@include laptop {
+	width: 40%;
+}
+@include desktop {
+	width: 35%;
 }
 </style>
