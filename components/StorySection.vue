@@ -123,7 +123,7 @@ onMounted(() => {
 		display: block;
 		width: 80px;
 		height: 2px;
-		background: var(--accent);
+		background: $highlight;
 		margin: 1.5rem auto 0;
 	}
 }

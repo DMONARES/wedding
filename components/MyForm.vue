@@ -1,51 +1,95 @@
 <template>
 	<form @submit.prevent="handleSubmit" class="form">
-		<div class="guests-section">
-			<div
-				v-for="(guest, index) in guests"
-				:key="index"
-				class="guest-input-wrapper"
-			>
-				<div class="guest-input-container">
-					<UiInput
-						v-model="guest.name"
-						:placeholder="index === 0 ? 'Ваше ФИО' : 'ФИО гостя'"
-						class="guest-input"
-						:variant="index === 0 ? 'default' : 'removable'"
-						@remove="removeGuest(index)"
-					/>
+		<h2 class="section-title">Подтвердите присутствие</h2>
+
+		<div class="form-content">
+			<div class="guests-section">
+				<div class="guests-header">
+					<div class="guests-label">
+						<p>Ваши данные</p>
+						<p class="hint">
+							Добавьте гостей, которые придут с вами
+						</p>
+					</div>
+
+					<div class="counter-wrapper">
+						<UiCounter
+							:value="guests.length"
+							:min="1"
+							:max="10"
+							:disabled-plus="guests.length >= 10"
+							@increase="addGuest"
+							@decrease="removeLastGuest"
+						/>
+						<span class="counter-label">Количество гостей</span>
+					</div>
+				</div>
+
+				<div class="guests-list">
+					<TransitionGroup name="guest" tag="div">
+						<div
+							v-for="(guest, index) in guests"
+							:key="index"
+							class="guest-input-wrapper"
+						>
+							<div class="guest-input-container">
+								<UiInput
+									v-model="guest.name"
+									:placeholder="
+										index === 0 ? 'Ваше ФИО' : 'ФИО гостя'
+									"
+									class="guest-input"
+									:variant="
+										index === 0 ? 'default' : 'removable'
+									"
+									@remove="removeGuest(index)"
+								/>
+							</div>
+						</div>
+					</TransitionGroup>
 				</div>
 			</div>
-			<UiCounter
-				:value="guests.length"
-				:min="1"
-				:max="10"
-				:disabled-plus="guests.length >= 10"
-				@increase="addGuest"
-				@decrease="removeLastGuest"
-			/>
-		</div>
-		<div class="form-group">
-			<UiInput
-				v-model="message"
-				placeholder="Комментарий"
-				type="textarea"
-			/>
-		</div>
-		<UiButton type="submit" class="form-submit" :disabled="loading">
-			{{ loading ? "Отправка..." : "Отправить" }}
-		</UiButton>
-		<div v-if="successMessage" class="form-message form-message--success">
-			{{ successMessage }}
+
+			<div class="form-group">
+				<UiInput
+					v-model="message"
+					placeholder="Комментарий или пожелания"
+					type="textarea"
+				/>
+			</div>
+
+			<UiButton type="submit" class="form-submit" :disabled="loading">
+				{{ loading ? "Отправка..." : "Отправить" }}
+			</UiButton>
+
+			<div v-if="successMessage" class="success-overlay">
+				<div class="success-content">
+					<svg viewBox="0 0 24 24" width="64" height="64">
+						<path
+							fill="$highlight"
+							d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"
+						/>
+					</svg>
+					<h3>Спасибо за подтверждение!</h3>
+					<p>Ваше присутствие успешно подтверждено</p>
+					<p class="countdown">
+						Форма закроется через {{ countdown }} сек
+					</p>
+				</div>
+			</div>
 		</div>
 	</form>
 </template>
 
 <script setup>
+import { ref } from "vue";
+
 const guests = ref([{ name: "" }]);
 const message = ref("");
 const loading = ref(false);
 const successMessage = ref("");
+const countdown = ref(5);
+let countdownInterval = null;
 
 const addGuest = () => {
 	if (guests.value.length < 10) {
@@ -65,6 +109,17 @@ const removeGuest = (index) => {
 	}
 };
 
+const startCountdown = () => {
+	countdown.value = 5;
+	countdownInterval = setInterval(() => {
+		countdown.value--;
+		if (countdown.value <= 0) {
+			clearInterval(countdownInterval);
+			successMessage.value = "";
+		}
+	}, 1000);
+};
+
 const handleSubmit = async () => {
 	loading.value = true;
 	successMessage.value = "";
@@ -82,19 +137,15 @@ const handleSubmit = async () => {
 	}
 
 	try {
-		const res = await $fetch("/api/send", {
-			method: "POST",
-			body: {
-				guests: cleanedGuests,
-				message: message.value,
-			},
-		});
+		// Эмуляция отправки (в реальном коде здесь будет запрос)
+		await new Promise((resolve) => setTimeout(resolve, 1000));
 
-		if (res.ok) {
-			successMessage.value = "Ваше присутствие подтверждено! Ждём вас ❤️";
-			guests.value = [{ name: "" }];
-			message.value = "";
-		}
+		successMessage.value = "Ваше присутствие подтверждено!";
+		startCountdown();
+
+		// Очищаем форму: оставляем только первого гостя и очищаем его, а также сообщение
+		guests.value = [{ name: "" }];
+		message.value = "";
 	} catch (err) {
 		console.error(err);
 	} finally {
@@ -105,90 +156,262 @@ const handleSubmit = async () => {
 
 <style lang="scss" scoped>
 .form {
-	display: flex;
-	flex-direction: column;
-	gap: 2rem;
-	max-width: 500px;
-	margin: 0 auto;
-	padding: 2rem;
+	max-width: 700px;
+	margin: 3rem auto 0;
+	padding: 3rem 2.5rem;
 	background: $surface;
 	border: 1px solid $accent;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+	position: relative;
+	overflow: hidden;
+}
+
+.section-title {
+	font-family: "Playfair Display", serif;
+	font-size: clamp(1.8rem, 3vw, 2.2rem);
+	color: $text;
+	margin-bottom: 1.5rem;
+	position: relative;
+	text-align: center;
+	font-weight: 500;
+
+	&::after {
+		content: "";
+		display: block;
+		width: 80px;
+		height: 2px;
+		background: $accent;
+		margin: 1rem auto 0;
+	}
+}
+
+.form-content {
+	display: flex;
+	flex-direction: column;
+	gap: 1.2rem;
 }
 
 .guests-section {
 	display: flex;
 	flex-direction: column;
-	gap: 1rem;
+	gap: 0.8rem;
 }
 
-.section-title {
-	font-weight: 700;
-	font-size: 1.125rem;
+.guests-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+	margin-bottom: 0.8rem;
+	flex-wrap: wrap;
+	gap: 0.8rem;
+}
+
+.guests-label {
+	p {
+		font-family: "Avenir Next Cyr", sans-serif;
+		font-size: 1.1rem;
+		color: $text;
+		margin: 0;
+
+		&.hint {
+			font-size: 0.85rem;
+			opacity: 0.7;
+			margin-top: 0.1rem;
+		}
+	}
+}
+
+.counter-wrapper {
+	display: flex;
+	align-items: center;
+	gap: 0.8rem;
+}
+
+.counter-label {
+	font-family: "Avenir Next Cyr", sans-serif;
+	font-size: 1rem;
 	color: $text;
-	margin-bottom: 0.5rem;
+	opacity: 0.9;
+}
+
+.guest-input-wrapper {
+	width: 100%;
 }
 
 .guest-input-container {
 	position: relative;
+	margin-bottom: 0.3rem;
 }
 
-:deep(.guest-input.has-remove) {
-	.ui-input__field {
-		padding-right: 3rem;
+.guests-list {
+	padding-top: 10px;
+	max-height: 50vh;
+	overflow-y: auto;
+	padding-right: 0.5rem;
+
+	/* Стили для скроллбара */
+	&::-webkit-scrollbar {
+		width: 4px;
+	}
+
+	&::-webkit-scrollbar-track {
+		background: rgba($accent, 0.1);
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background: rgba($highlight, 0.4);
+		border-radius: 2px;
+
+		&:hover {
+			background: $highlight;
+		}
 	}
 }
 
-.guest-input__remove {
-	position: absolute;
-	right: 1rem;
-	top: 50%;
-	transform: translateY(-50%);
-	width: 1.5rem;
-	height: 1.5rem;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	background: none;
-	border: none;
-	color: $gray;
-	font-size: 1.2rem;
-	cursor: pointer;
-	@include smooth;
-
-	&:hover {
-		color: $red;
-	}
+.form-group {
+	margin-top: 0.5rem;
 }
 
 .form-submit {
-	padding: 1rem;
-	background: $highlight;
-	color: white;
-	border: none;
-	font-weight: 700;
-	letter-spacing: 0.05em;
-	cursor: pointer;
-	@include smooth;
+	margin-top: 0.5rem;
+	align-self: center;
+	min-width: 200px;
+}
 
-	&:disabled {
-		opacity: 0.5;
-		cursor: not-allowed;
+.success-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba($surface, 0.95);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 10;
+	padding: 2rem;
+	animation: fadeIn 0.5s ease;
+}
+
+.success-content {
+	text-align: center;
+	max-width: 400px;
+
+	svg {
+		margin-bottom: 1rem;
 	}
 
-	&:hover:not(:disabled) {
-		background: darken($highlight, 10%);
+	h3 {
+		font-family: "Playfair Display", serif;
+		font-size: 1.6rem;
+		color: $text;
+		margin-bottom: 0.8rem;
+	}
+
+	p {
+		font-family: "Avenir Next Cyr", sans-serif;
+		font-size: 1rem;
+		color: $text;
+		opacity: 0.9;
+		line-height: 1.5;
+
+		&.countdown {
+			margin-top: 1.5rem;
+			font-size: 0.85rem;
+			opacity: 0.7;
+		}
 	}
 }
 
-.form-message {
-	font-weight: 500;
-	text-align: center;
-	padding: 1rem;
-	margin-top: 1rem;
+/* Анимации */
+.guest-move,
+.guest-enter-active,
+.guest-leave-active {
+	transition: all 0.5s ease;
+	width: 100%;
+}
 
-	&--success {
-		color: $highlight;
-		background: rgba($highlight, 0.1);
+.guest-enter-from,
+.guest-leave-to {
+	opacity: 0;
+	transform: translateY(-10px);
+}
+
+.guest-leave-active {
+	position: absolute;
+	width: 100%;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+/* Адаптив */
+@media (max-width: 768px) {
+	.form {
+		padding: 1.8rem 1.5rem;
+		margin-top: 1.5rem;
+	}
+
+	.guests-header {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.5rem;
+	}
+
+	.counter-wrapper {
+		width: 100%;
+		justify-content: space-between;
+	}
+
+	.section-title {
+		text-align: left;
+		font-size: 1.6rem;
+
+		&::after {
+			margin-left: 0;
+		}
+	}
+
+	.guests-list {
+		max-height: 40vh;
+	}
+
+	.guests-label p {
+		font-size: 1rem;
+
+		&.hint {
+			font-size: 0.75rem;
+		}
+	}
+
+	.counter-label {
+		font-size: 0.9rem;
+	}
+}
+
+@media (max-width: 480px) {
+	.form {
+		padding: 1.5rem 1.2rem;
+	}
+
+	.guests-label p {
+		font-size: 0.95rem;
+	}
+
+	.success-content {
+		h3 {
+			font-size: 1.4rem;
+		}
+
+		p {
+			font-size: 0.9rem;
+		}
 	}
 }
 </style>

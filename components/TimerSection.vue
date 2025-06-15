@@ -84,10 +84,8 @@ onBeforeUnmount(() => {
 
 <style scoped lang="scss">
 .timer-section {
-	--accent: #8a6f8f;
-
 	padding: 6rem 1.5rem;
-	background: var(--surface);
+	background: $surface;
 	position: relative;
 	overflow: hidden;
 }
@@ -104,7 +102,7 @@ onBeforeUnmount(() => {
 .section-title {
 	font-family: "Playfair Display", serif;
 	font-size: clamp(2rem, 5vw, 3rem);
-	color: var(--text);
+	color: $text;
 	margin-bottom: 3rem;
 	font-weight: 500;
 }
@@ -118,7 +116,7 @@ onBeforeUnmount(() => {
 }
 
 .timer-unit {
-	background: var(--base);
+	background: $base;
 	border-radius: 16px;
 	padding: 1.5rem;
 	width: calc(25% - 2rem);
@@ -137,7 +135,7 @@ onBeforeUnmount(() => {
 	font-family: "Avenir Next Cyr", sans-serif;
 	font-size: clamp(2rem, 6vw, 3.5rem);
 	font-weight: 600;
-	color: var(--highlight);
+	color: $highlight;
 	line-height: 1.2;
 	margin-bottom: 0.5rem;
 }
@@ -145,7 +143,7 @@ onBeforeUnmount(() => {
 .timer-label {
 	font-family: "Avenir Next Cyr", sans-serif;
 	font-size: clamp(0.9rem, 2vw, 1.1rem);
-	color: var(--text);
+	color: $text;
 	opacity: 0.8;
 	text-transform: uppercase;
 	letter-spacing: 0.05em;
@@ -154,7 +152,7 @@ onBeforeUnmount(() => {
 .divider {
 	width: 100px;
 	height: 1px;
-	background: var(--accent);
+	background: $highlight;
 	margin: 3rem auto;
 	opacity: 0.6;
 }
@@ -162,7 +160,7 @@ onBeforeUnmount(() => {
 .timer-message {
 	font-family: "Cormorant Garamond", serif;
 	font-size: clamp(1.2rem, 3vw, 1.5rem);
-	color: var(--text);
+	color: $text;
 	max-width: 600px;
 	margin: 0 auto;
 	font-style: italic;

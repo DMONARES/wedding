@@ -125,7 +125,7 @@ onMounted(() => {
 .divider {
 	width: 120px;
 	height: 1px;
-	background: var(--accent);
+	background: $highlight;
 	margin: 2rem auto;
 	opacity: 0.6;
 }
@@ -214,7 +214,7 @@ onMounted(() => {
 		transform: translateY(-50%);
 		width: 2px;
 		height: 1em;
-		background: var(--accent);
+		background: $highlight;
 		opacity: 0.6;
 	}
 }

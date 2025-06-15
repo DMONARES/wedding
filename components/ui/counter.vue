@@ -56,7 +56,7 @@ defineEmits(["increase", "decrease"]);
 		width: 3rem;
 		height: 3rem;
 		background: $surface;
-		border: 1px solid $accent;
+		border: 1px solid $highlight;
 		font-size: 1.5rem;
 		font-weight: 500;
 		color: $text;
@@ -64,12 +64,12 @@ defineEmits(["increase", "decrease"]);
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		transition: all 0.2s ease;
-		font-family: $firstFont;
+		transition: all 0.3s ease;
+		font-family: "Playfair Display", serif;
 
 		&:hover:not(:disabled) {
 			background: $highlight;
-			color: $white;
+			color: white;
 			border-color: $highlight;
 		}
 
@@ -84,14 +84,14 @@ defineEmits(["increase", "decrease"]);
 		width: 3rem;
 		height: 3rem;
 		background: $surface;
-		border: 1px solid $accent;
+		border: 1px solid $highlight;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		font-size: 1.125rem;
 		font-weight: 500;
-		color: $text;
-		font-family: $firstFont;
+		color: var(--text);
+		font-family: "Playfair Display", serif;
 	}
 }
 </style>
