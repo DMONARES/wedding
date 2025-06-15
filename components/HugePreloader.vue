@@ -31,36 +31,54 @@ const overlayRef = ref<HTMLElement | null>(null);
 const show = ref(true);
 
 onMounted(async () => {
-	await nextTick(); // дождаться рендера DOM
+	await nextTick();
 	const pathEl = pathRef.value;
 	if (!pathEl) return;
-	const length = pathEl.getTotalLength();
-	// Устанавливаем начальные dash-значения
-	pathEl.style.strokeDasharray = `${length}`;
-	pathEl.style.strokeDashoffset = `${length}`;
-	pathEl.style.visibility = "visible";
-	// Запускаем анимацию рисования
-	gsap.to(pathEl, {
-		strokeDashoffset: 0,
-		duration: 5,
-		ease: "power1.inOut",
-		onComplete() {
-			// Скрыть overlay через ref
-			const ov = overlayRef.value;
-			if (ov) {
-				gsap.to(ov, {
-					opacity: 0,
-					duration: 0.5,
-					delay: 0.3,
+
+	// Добавляем задержку для iOS Safari
+	setTimeout(() => {
+		try {
+			const length = pathEl.getTotalLength();
+			if (length && length > 0) {
+				pathEl.style.strokeDasharray = `${length}`;
+				pathEl.style.strokeDashoffset = `${length}`;
+				pathEl.style.visibility = "visible";
+
+				gsap.to(pathEl, {
+					strokeDashoffset: 0,
+					duration: 5,
+					ease: "power1.inOut",
 					onComplete() {
-						show.value = false;
+						const ov = overlayRef.value;
+						if (ov) {
+							gsap.to(ov, {
+								opacity: 0,
+								duration: 0.5,
+								delay: 0.3,
+								onComplete() {
+									show.value = false;
+								},
+							});
+						} else {
+							show.value = false;
+						}
 					},
 				});
 			} else {
-				show.value = false;
+				// Fallback если getTotalLength не работает
+				pathEl.style.visibility = "visible";
+				setTimeout(() => {
+					show.value = false;
+				}, 2000);
 			}
-		},
-	});
+		} catch (error) {
+			// Fallback для ошибок
+			pathEl.style.visibility = "visible";
+			setTimeout(() => {
+				show.value = false;
+			}, 2000);
+		}
+	}, 100);
 });
 </script>
 
@@ -85,6 +103,9 @@ onMounted(async () => {
 	color: #000;
 	visibility: hidden;
 	overflow: visible;
+	/* Принудительно включаем аппаратное ускорение для iOS */
+	transform: translateZ(0);
+	-webkit-transform: translateZ(0);
 
 	@include tablet {
 		width: 50%;
@@ -98,4 +119,10 @@ onMounted(async () => {
 		width: 35%;
 	}
 }
-</style>s
+
+/* Дополнительные стили для iOS Safari */
+.preloader-svg path {
+	transform: translateZ(0);
+	-webkit-transform: translateZ(0);
+}
+</style>
