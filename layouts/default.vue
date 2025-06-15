@@ -2,6 +2,7 @@
 
 <template>
 	<div class="default-layout">
+		<HugePreloader />
 		<Header />
 		<main>
 			<slot />
