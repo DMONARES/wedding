@@ -1,11 +1,15 @@
 <template>
 	<ClientOnly>
-		<div v-if="show" ref="overlayRef" class="preloader-overlay">
+		<div
+			ref="overlayRef"
+			class="huge-preloader"
+			:class="{ 'huge-preloader--hidden': !show }"
+		>
 			<svg
 				ref="svgRef"
 				viewBox="0 0 200 200"
 				xmlns="http://www.w3.org/2000/svg"
-				class="preloader-svg"
+				class="huge-preloader__svg"
 			>
 				<path
 					ref="pathRef"
@@ -60,7 +64,7 @@ onMounted(async () => {
 
 				gsap.to(pathEl, {
 					strokeDashoffset: 0,
-					duration: 5,
+					duration: 3,
 					ease: "power1.inOut",
 					onComplete() {
 						clearTimeout(fallbackTimeout);
@@ -98,9 +102,10 @@ onMounted(async () => {
 	}, 300); // Увеличенная задержка для iOS
 });
 </script>
+<style lang="scss" scoped>
+.huge-preloader {
+	$block: &;
 
-<style scoped>
-.preloader-overlay {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -109,47 +114,52 @@ onMounted(async () => {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background: #fff;
+	background: $base;
 	z-index: 99999;
 	opacity: 1;
-	-webkit-backface-visibility: hidden; /* Фикс для Safari */
-}
+	-webkit-backface-visibility: hidden;
 
-.preloader-svg {
-	width: 60%;
-	height: auto;
-	color: #000;
-	opacity: 0; /* Заменяем visibility на opacity */
-	overflow: visible;
-	transform: translateZ(0);
-	-webkit-transform: translateZ(0);
-	-webkit-font-smoothing: antialiased; /* Улучшение рендеринга */
-	backface-visibility: hidden; /* Фикс артефактов */
-	will-change: opacity, transform; /* Оптимизация анимации */
-}
+	&__svg {
+		width: 60%;
+		height: auto;
+		color: $text;
+		opacity: 0;
+		overflow: visible;
+		transform: translateZ(0);
+		-webkit-transform: translateZ(0);
+		-webkit-font-smoothing: antialiased;
+		backface-visibility: hidden;
+		will-change: opacity, transform;
 
-/* Фикс для Safari */
-@supports (-webkit-touch-callout: none) {
-	.preloader-svg {
-		-webkit-transform: translate3d(0, 0, 0);
-		transform: translate3d(0, 0, 0);
+		@include tablet {
+			width: 50%;
+		}
+
+		@include laptop {
+			width: 40%;
+		}
+
+		@include desktop {
+			width: 35%;
+		}
+
+		// Фикс для Safari
+		@supports (-webkit-touch-callout: none) {
+			-webkit-transform: translate3d(0, 0, 0);
+			transform: translate3d(0, 0, 0);
+		}
+
+		path {
+			transform: translateZ(0);
+			-webkit-transform: translateZ(0);
+			will-change: stroke-dashoffset, stroke-dasharray;
+		}
 	}
-}
 
-.preloader-svg path {
-	transform: translateZ(0);
-	-webkit-transform: translateZ(0);
-	will-change: stroke-dashoffset, stroke-dasharray; /* Оптимизация анимации */
-}
-
-/* Медиа-запросы остаются без изменений */
-@include tablet {
-	width: 50%;
-}
-@include laptop {
-	width: 40%;
-}
-@include desktop {
-	width: 35%;
+	&--hidden {
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity 0.5s ease;
+	}
 }
 </style>

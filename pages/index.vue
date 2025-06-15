@@ -1,11 +1,42 @@
-<script setup></script>
+<script setup>
+const showPreloader = ref(true);
+
+onMounted(() => {
+	setTimeout(() => {
+		showPreloader.value = false;
+		document.body.style.overflow = "auto";
+	}, 5000);
+});
+</script>
 
 <template>
-	<div>
-		<!-- <YandexMap style="margin-top: 30px" /> -->
-		<MyForm style="margin-top: 30px; margin-bottom: 30px" />
-		<!-- <Timer /> -->
+	<div v-if="showPreloader" class="preloader-container"></div>
+
+	<div v-else class="main-content">
+		<HeroSection />
+		<div id="content-section" class="content-container">
+			<MyForm />
+		</div>
 	</div>
 </template>
 
-<style lang="scss"></style>
+<style>
+html,
+body {
+	overflow: auto !important;
+	height: auto !important;
+}
+
+.preloader-container {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 10000;
+}
+
+.main-content {
+	position: relative;
+}
+</style>
