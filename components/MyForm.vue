@@ -164,7 +164,7 @@ const handleSubmit = async () => {
 <style lang="scss" scoped>
 .form {
 	max-width: 700px;
-	margin: 3rem auto 0;
+	margin: 6rem auto 5rem;
 	padding: 3rem 2.5rem;
 	background: $surface;
 	border: 1px solid $accent;

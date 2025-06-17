@@ -1,11 +1,28 @@
 <script setup>
 const showPreloader = ref(true);
 
+// const dmzArt = `
+//  #####     #   #    ######
+//  #    #    ## ##        #
+//  #     #   # # #       #
+//  #     #   #   #      #
+//  #    #    #   #     #
+//  #####     #   #    ######
+// `;
+
+const catArt = `
+ /\\_/\\
+( o.o )
+ > ^ <
+`;
+
 onMounted(() => {
 	setTimeout(() => {
 		showPreloader.value = false;
 		document.body.style.overflow = "auto";
 	}, 5000);
+	// console.log(dmzArt + "\n" + catArt);
+	console.log(catArt);
 });
 </script>
 

@@ -117,6 +117,7 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .location-section {
+	margin-top: 6rem;
 	background: var(--base);
 	padding: 0;
 	position: relative;
