@@ -108,3 +108,25 @@
 svg {
 	shape-rendering: geometricPrecision;
 }
+
+/* Общий контейнер скроллбара */
+::-webkit-scrollbar {
+	width: 6px;
+}
+
+/* Трек (фон) */
+::-webkit-scrollbar-track {
+	background: transparent;
+	border-radius: 6px;
+}
+
+/* Ползунок */
+::-webkit-scrollbar-thumb {
+	background: #8a6f8f;
+	border-radius: 6px;
+}
+
+/* При наведении */
+::-webkit-scrollbar-thumb:hover {
+	background: #8a6f8fb0;
+}
