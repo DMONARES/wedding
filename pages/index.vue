@@ -33,6 +33,7 @@ onMounted(() => {
 		<HeroSection />
 		<StorySection />
 		<TimerSection />
+		<ProgrammSection />
 		<YandexMap />
 		<div id="content-section" class="content-container">
 			<MyForm />
