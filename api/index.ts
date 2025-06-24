@@ -1,8 +1,9 @@
-// api/index.ts
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+
 export default {
-  login: 'http://localhost:8080/login',
-  addGuest: 'http://localhost:8080/guest',
-  getGuests: 'http://localhost:8080/guests',
-  editGuest: (id: number | string) => `http://localhost:8080/guest/${id}`,
-  deleteGuest: (id: number | string) => `http://localhost:8080/guest/${id}`,
-}
+  login: `${BASE_URL}/login`,
+  addGuest: `${BASE_URL}/guest`,
+  getGuests: `${BASE_URL}/guests`,
+  editGuest: (id: number | string) => `${BASE_URL}/guest/${id}`,
+  deleteGuest: (id: number | string) => `${BASE_URL}/guest/${id}`,
+};
