@@ -62,7 +62,7 @@
 				{{ loading ? "Отправка..." : "Отправить" }}
 			</UiButton>
 
-			<div v-if="successMessage" class="success-overlay">
+			<div v-if="isSuccess" class="success-overlay">
 				<div class="success-content">
 					<svg viewBox="0 0 24 24" width="64" height="64">
 						<path
@@ -81,15 +81,17 @@
 	</form>
 </template>
 
-<script setup>
-import { ref } from "vue";
+<script setup lang="ts">
+import { ref, watch } from "vue";
+import { useApi } from "@/composables/useApi";
+
+const { sendForm, loading } = useApi();
 
 const guests = ref([{ name: "" }]);
 const message = ref("");
-const loading = ref(false);
-const successMessage = ref("");
+const isSuccess = ref(false);
 const countdown = ref(5);
-let countdownInterval = null;
+let timer: NodeJS.Timeout | null = null;
 
 const addGuest = () => {
 	if (guests.value.length < 10) {
@@ -103,60 +105,46 @@ const removeLastGuest = () => {
 	}
 };
 
-const removeGuest = (index) => {
-	if (guests.value.length > 1) {
+const removeGuest = (index: number) => {
+	if (index > 0 && guests.value.length > 1) {
 		guests.value.splice(index, 1);
 	}
 };
 
-const startCountdown = () => {
+watch(
+	() => guests.value.length,
+	(newCount) => {
+		if (newCount < 1) guests.value = [{ name: "" }];
+		if (newCount > 10) guests.value.splice(10);
+	}
+);
+
+const startSuccessTimer = () => {
 	countdown.value = 5;
-	countdownInterval = setInterval(() => {
+	if (timer) clearInterval(timer);
+	timer = setInterval(() => {
 		countdown.value--;
 		if (countdown.value <= 0) {
-			clearInterval(countdownInterval);
-			successMessage.value = "";
+			isSuccess.value = false;
+			clearInterval(timer!);
 		}
 	}, 1000);
 };
 
 const handleSubmit = async () => {
-	loading.value = true;
-	successMessage.value = "";
-
-	// Удаляем пустые поля гостей (кроме основного)
-	const cleanedGuests = [
-		guests.value[0],
-		...guests.value.slice(1).filter((g) => g.name.trim() !== ""),
-	];
-
-	// Проверка основного гостя
-	if (!cleanedGuests[0]?.name?.trim()) {
-		loading.value = false;
-		return;
-	}
-
 	try {
-		const res = await $fetch("/api/send", {
-			method: "POST",
-			body: {
-				guests: cleanedGuests,
-				message: message.value,
-			},
-		});
+		const validGuests = guests.value.map((g) => ({
+			name: g.name.trim() || "Без имени",
+		}));
+		await sendForm(validGuests, message.value.trim());
 
-		if (res.ok) {
-			successMessage.value = "Ваше присутствие подтверждено! Ждём вас ❤️";
-			startCountdown();
+		isSuccess.value = true;
+		startSuccessTimer();
 
-			// Очищаем форму
-			guests.value = [{ name: "" }];
-			message.value = "";
-		}
-	} catch (err) {
-		console.error(err);
-	} finally {
-		loading.value = false;
+		guests.value = [{ name: "" }];
+		message.value = "";
+	} catch (e) {
+		console.error(e);
 	}
 };
 </script>
