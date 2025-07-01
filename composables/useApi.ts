@@ -1,5 +1,6 @@
 import api from "@/api";
 import { ref } from "vue";
+import { useAuth } from "@/composables/useAuth";
 
 export const useApi = () => {
 	const loading = ref(false);
@@ -41,3 +42,14 @@ export const useApi = () => {
 		error,
 	};
 };
+
+// Универсальный fetch с авторизацией
+export async function authorizedFetch(url: string, opts: any = {}) {
+	const { getToken } = useAuth();
+	const token = getToken();
+	const headers = opts.headers || {};
+	if (token) {
+		headers["Authorization"] = `Bearer ${token}`;
+	}
+	return $fetch(url, { ...opts, headers });
+}
