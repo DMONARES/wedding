@@ -152,7 +152,7 @@ const handleSubmit = async () => {
 <style lang="scss" scoped>
 .form {
 	max-width: 700px;
-	margin: 6rem auto 5rem;
+	margin: 0 auto;
 	padding: 3rem 2.5rem;
 	background: $surface;
 	border: 1px solid $accent;
@@ -349,7 +349,6 @@ const handleSubmit = async () => {
 @media (max-width: 768px) {
 	.form {
 		padding: 1.8rem 1.5rem;
-		margin-top: 1.5rem;
 	}
 
 	.guests-header {

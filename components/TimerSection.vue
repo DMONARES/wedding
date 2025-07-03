@@ -40,7 +40,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
 
-const weddingDate = new Date("2025-08-01T15:00:00");
+const weddingDate = new Date("2025-08-03T14:00:00");
 const days = ref("00");
 const hours = ref("00");
 const minutes = ref("00");

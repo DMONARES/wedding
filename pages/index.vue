@@ -31,10 +31,10 @@ onMounted(() => {
 
 	<div v-else class="main-content">
 		<HeroSection />
-		<StorySection />
-		<TimerSection />
-		<ProgrammSection />
+		<!-- <StorySection /> -->
+		<!-- <ProgrammSection /> -->
 		<YandexMap />
+		<TimerSection />
 		<div id="content-section" class="content-container">
 			<MyForm />
 		</div>
