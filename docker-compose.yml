@@ -1,0 +1,11 @@
+services:
+  weddingCall:
+    image: node:20-alpine
+    container_name: wedding-site-frontend-1
+    restart: always
+    ports:
+      - 3000:3000
+    volumes:
+      - ./www/:/app
+    working_dir: /app
+    command: npm run preview
