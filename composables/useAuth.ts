@@ -1,22 +1,20 @@
-import { ref } from "vue";
-import Cookies from "js-cookie";
+import { ref, computed } from "vue";
+import { useCookie } from '#app'
 import api from "@/api";
 
 const TOKEN_KEY = "wedding_token";
 
-const token = ref<string | null>(Cookies.get(TOKEN_KEY) || null);
-const isAuth = ref(!!token.value);
+const token = useCookie(TOKEN_KEY)
+const isAuth = computed(() => !!token.value)
 
 function setToken(newToken: string) {
 	token.value = newToken;
 	isAuth.value = true;
-	Cookies.set(TOKEN_KEY, newToken, { expires: 7 });
 }
 
 function clearToken() {
 	token.value = null;
 	isAuth.value = false;
-	Cookies.remove(TOKEN_KEY);
 }
 
 async function login(username: string, password: string) {
