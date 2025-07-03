@@ -6,14 +6,14 @@
 					<h2 class="section-title">Место проведения</h2>
 
 					<div class="info-group">
-						<h3>Загородный клуб «Лес и Река»</h3>
+						<h3>Ресторан «Новая волна»</h3>
 						<p class="address">
 							<svg class="icon" viewBox="0 0 24 24">
 								<path
 									d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"
 								/>
 							</svg>
-							Владикавказ, ул. Лесная, 15
+							Владикавказ, просп. Коста, 20А
 						</p>
 					</div>
 
@@ -29,7 +29,7 @@
 							</svg>
 							<div>
 								<h4>Дата и время</h4>
-								<p>1 августа 2025 года<br />Начало в 15:00</p>
+								<p>3 августа 2025 года<br />Начало в 15:00</p>
 							</div>
 						</div>
 
@@ -61,14 +61,14 @@
 						</div>
 					</div>
 
-					<div class="transport-info">
+					<!-- <div class="transport-info">
 						<h4>Как добраться:</h4>
 						<ul>
 							<li>От центра города - 15 минут на автомобиле</li>
 							<li>Такси: закажите через приложение Maxim</li>
 							<li>Автобус №102 до остановки "Лесной клуб"</li>
 						</ul>
-					</div>
+					</div> -->
 				</div>
 			</div>
 
@@ -86,13 +86,13 @@ const initMap = () => {
 	const ymaps = window.ymaps;
 	ymaps.ready(() => {
 		const map = new ymaps.Map("map", {
-			center: [43.029421, 44.677549],
+			center: [42.987383, 44.678353],
 			zoom: 14,
 			controls: [],
 		});
 
-		const placemark = new ymaps.Placemark([43.029421, 44.677549], {
-			balloonContent: "Загородный клуб «Лес и Река»",
+		const placemark = new ymaps.Placemark([42.987383, 44.678353], {
+			balloonContent: "Ресторан «Новая волна»",
 		});
 
 		map.geoObjects.add(placemark);

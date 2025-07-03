@@ -1,27 +1,26 @@
 <template>
 	<section class="hero">
 		<div class="video-overlay"></div>
-		<video class="hero-video" autoplay muted loop playsinline>
+		<video v-if="false" class="hero-media" autoplay muted loop playsinline>
 			<source src="/videos/hero-wedding-1.webm" type="video/webm" />
 		</video>
 
 		<div class="hero-content">
 			<div class="names-container">
-				<h1 class="name name--first">Анита</h1>
+				<h1 class="name name--first">Игорь</h1>
 				<div class="ampersand">&</div>
-				<h1 class="name name--second">Игорь</h1>
+				<h1 class="name name--second">Анита</h1>
 			</div>
 
 			<div class="divider"></div>
 
 			<p class="wedding-date">
-				<span class="day-month">1 августа</span>
+				<span class="day-month">3 августа</span>
 				<span class="year">2025</span>
 			</p>
 
 			<p class="invitation-text">
-				С великой радостью приглашаем вас<br />на нашу свадебную
-				церемонию
+				Приглашаем вас разделить с нами <br> этот особенный день
 			</p>
 		</div>
 	</section>
@@ -58,9 +57,13 @@ onMounted(() => {
 	align-items: center;
 	justify-content: center;
 	overflow: hidden;
+	background-image: url('/images/hero-image-desktop.jpg');
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
 }
 
-.hero-video {
+.hero-media {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -222,6 +225,11 @@ onMounted(() => {
 @media (max-width: 480px) {
 	.invitation-text br {
 		display: none;
+	}
+}
+@media (max-width: 768px) {
+	.hero {
+		background-image: url('/images/hero-image-mobile.jpg');
 	}
 }
 </style>

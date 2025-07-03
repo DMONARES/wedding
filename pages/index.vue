@@ -1,27 +1,38 @@
 <script setup>
 const showPreloader = ref(true);
-
-// const dmzArt = `
-//  #####     #   #    ######
-//  #    #    ## ##        #
-//  #     #   # # #       #
-//  #     #   #   #      #
-//  #    #    #   #     #
-//  #####     #   #    ######
-// `;
-
 const catArt = `
  /\\_/\\
 ( o.o )
  > ^ <
 `;
 
+useHead({
+	title: "Wedding",
+	meta: [
+		{
+			name: "description",
+			content:
+				"Приглашаем вас на нашу свадьбу 3 августа 2025 года. Подробности, программа, карта и RSVP.",
+		},
+		{
+			name: "keywords",
+			content: "свадьба, Игорь и Анита, приглашение, 2025, rsvp",
+		},
+		{ property: "og:title", content: "Свадьба Игоря и Аниты" },
+		{
+			property: "og:description",
+			content: "Приглашаем вас разделить с нами этот особенный день!",
+		},
+		{ property: "og:image", content: "/images/hero-image-desktop.jpg" },
+		{ property: "og:type", content: "website" },
+	],
+});
+
 onMounted(() => {
 	setTimeout(() => {
 		showPreloader.value = false;
 		document.body.style.overflow = "auto";
 	}, 5000);
-	// console.log(dmzArt + "\n" + catArt);
 	console.log(catArt);
 });
 </script>
@@ -31,10 +42,8 @@ onMounted(() => {
 
 	<div v-else class="main-content">
 		<HeroSection />
-		<StorySection />
-		<TimerSection />
-		<ProgrammSection />
 		<YandexMap />
+		<TimerSection />
 		<div id="content-section" class="content-container">
 			<MyForm />
 		</div>
