@@ -23,8 +23,9 @@ useHead({
 			property: "og:description",
 			content: "Приглашаем вас разделить с нами этот особенный день!",
 		},
-		{ property: "og:image", content: "/images/hero-image-desktop.jpg" },
+		{ property: "og:image", content: "https://wedding-call.ru/images/hero-image-desktop.jpg" },
 		{ property: "og:type", content: "website" },
+		{ property: "og:url", content: "https://wedding-call.ru" },
 	],
 });
 
