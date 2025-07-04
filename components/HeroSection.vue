@@ -57,7 +57,7 @@ onMounted(() => {
 	align-items: center;
 	justify-content: center;
 	overflow: hidden;
-	background-image: url('/images/hero-image-desktop.jpg');
+	background-image: url('/images/hero-image-desktop.webp');
 	background-size: cover;
 	background-position: center;
 	background-repeat: no-repeat;
@@ -229,7 +229,7 @@ onMounted(() => {
 }
 @media (max-width: 768px) {
 	.hero {
-		background-image: url('/images/hero-image-mobile.jpg');
+		background-image: url('/images/hero-image-mobile.webp');
 	}
 }
 </style>
