@@ -12,7 +12,7 @@
 						</p>
 					</div>
 
-					<div class="counter-wrapper">
+					<!-- <div class="counter-wrapper">
 						<UiCounter
 							:value="guests.length"
 							:min="1"
@@ -22,7 +22,7 @@
 							@decrease="removeLastGuest"
 						/>
 						<span class="counter-label">Количество гостей</span>
-					</div>
+					</div> -->
 				</div>
 
 				<div class="guests-list">
