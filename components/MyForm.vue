@@ -28,7 +28,7 @@
 				<div class="guests-list">
 					<TransitionGroup name="guest" tag="div">
 						<div
-							v-for="(guest, index) in guests"
+						v-for="(guest, index) in guests"
 							:key="index"
 							class="guest-input-wrapper"
 						>
@@ -231,6 +231,10 @@ const handleSubmit = async () => {
 
 .guest-input-wrapper {
 	width: 100%;
+
+	&:first-child {
+		margin-top: 10px;
+	}
 }
 
 .guest-input-container {
