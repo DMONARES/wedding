@@ -277,7 +277,7 @@ function scrollToNextSection()
 .scroll-down-arrow {
 	position: absolute;
 	left: 50%;
-	bottom: 32px;
+	bottom: 60px;
 	transform: translateX(-50%);
 	cursor: pointer;
 	z-index: 10;
