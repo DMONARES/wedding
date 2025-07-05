@@ -23,6 +23,20 @@
 				Приглашаем вас разделить с нами <br> этот особенный день
 			</p>
 		</div>
+		<div class="scroll-down-arrow" @click="scrollToNextSection">
+			<svg width="96" height="40" viewBox="0 0 96 40" fill="none">
+				<defs>
+					<linearGradient id="arrow-gradient" x1="16" y1="28" x2="80" y2="28" gradientUnits="userSpaceOnUse">
+						<stop offset="0%" stop-color="white" stop-opacity="0" />
+						<stop offset="15%" stop-color="white" stop-opacity="1" />
+						<stop offset="85%" stop-color="white" stop-opacity="1" />
+						<stop offset="100%" stop-color="white" stop-opacity="0" />
+					</linearGradient>
+				</defs>
+				<path d="M16 24 L48 32 L80 24" stroke="url(#arrow-gradient)" stroke-width="2.2" stroke-linecap="round"
+					stroke-linejoin="round" fill="none" />
+			</svg>
+		</div>
 	</section>
 </template>
 
@@ -30,7 +44,8 @@
 import { onMounted } from "vue";
 import gsap from "gsap";
 
-onMounted(() => {
+onMounted(() =>
+{
 	gsap.from(".hero-content > *", {
 		duration: 1.8,
 		y: 40,
@@ -40,6 +55,33 @@ onMounted(() => {
 		delay: 0.6,
 	});
 });
+
+function scrollToNextSection()
+{
+	const hero = document.querySelector('.hero');
+	let nextSection = null;
+	if (hero)
+	{
+		let el = hero.nextElementSibling;
+		while (el)
+		{
+			if (el.offsetHeight > 0 && (el.tagName === 'SECTION' || el.classList.contains('YandexMap')))
+			{
+				nextSection = el;
+				break;
+			}
+			el = el.nextElementSibling;
+		}
+	}
+	if (!nextSection)
+	{
+		nextSection = document.querySelector('.YandexMap, .next-section, section');
+	}
+	if (nextSection)
+	{
+		nextSection.scrollIntoView({ behavior: 'smooth' });
+	}
+}
 </script>
 
 <style scoped>
@@ -79,11 +121,9 @@ onMounted(() => {
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background: linear-gradient(
-		to bottom,
-		rgba(0, 0, 0, 0.4) 0%,
-		rgba(138, 111, 143, 0.2) 100%
-	);
+	background: linear-gradient(to bottom,
+			rgba(0, 0, 0, 0.4) 0%,
+			rgba(138, 111, 143, 0.2) 100%);
 	z-index: 0;
 }
 
@@ -227,9 +267,45 @@ onMounted(() => {
 		display: none;
 	}
 }
+
 @media (max-width: 768px) {
 	.hero {
 		background-image: url('/images/hero-image-mobile.webp');
+	}
+}
+
+.scroll-down-arrow {
+	position: absolute;
+	left: 50%;
+	bottom: 32px;
+	transform: translateX(-50%);
+	cursor: pointer;
+	z-index: 10;
+	animation: arrow-bounce 1.6s infinite;
+	opacity: 0.85;
+	transition: opacity 0.2s;
+}
+
+.scroll-down-arrow svg {
+	width: 96px;
+	height: 40px;
+	display: block;
+	filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+}
+
+.scroll-down-arrow:hover {
+	opacity: 1;
+}
+
+@keyframes arrow-bounce {
+
+	0%,
+	100% {
+		transform: translateX(-50%) translateY(0);
+	}
+
+	50% {
+		transform: translateX(-50%) translateY(16px);
 	}
 }
 </style>

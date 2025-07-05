@@ -1,5 +1,5 @@
 <template>
-	<section class="location-section">
+	<section class="YandexMap">
 		<div class="location-container">
 			<div class="location-info">
 				<div class="info-content">
@@ -10,8 +10,7 @@
 						<p class="address">
 							<svg class="icon" viewBox="0 0 24 24">
 								<path
-									d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"
-								/>
+									d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z" />
 							</svg>
 							Владикавказ, просп. Коста, 20А
 						</p>
@@ -21,11 +20,8 @@
 						<div class="info-item">
 							<svg class="icon" viewBox="0 0 24 24">
 								<path
-									d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-								/>
-								<path
-									d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"
-								/>
+									d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z" />
+								<path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z" />
 							</svg>
 							<div>
 								<h4>Дата и время</h4>
@@ -36,8 +32,7 @@
 						<div class="info-item">
 							<svg class="icon" viewBox="0 0 24 24">
 								<path
-									d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-8 14H7v-2h4v2zm0-4H7v-2h4v2zm0-4H7V7h4v2zm6 8h-4v-2h4v2zm0-4h-4v-2h4v2zm0-4h-4V7h4v2z"
-								/>
+									d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-8 14H7v-2h4v2zm0-4H7v-2h4v2zm0-4H7V7h4v2zm6 8h-4v-2h4v2zm0-4h-4v-2h4v2zm0-4h-4V7h4v2z" />
 							</svg>
 							<div>
 								<h4>Парковка</h4>
@@ -48,8 +43,7 @@
 						<div class="info-item">
 							<svg class="icon" viewBox="0 0 24 24">
 								<path
-									d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"
-								/>
+									d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
 							</svg>
 							<div>
 								<h4>Дресс-код</h4>
@@ -81,9 +75,11 @@
 <script setup>
 import { onMounted } from "vue";
 
-const initMap = () => {
+const initMap = () =>
+{
 	const ymaps = window.ymaps;
-	ymaps.ready(() => {
+	ymaps.ready(() =>
+	{
 		const map = new ymaps.Map("map", {
 			center: [42.987383, 44.678353],
 			zoom: 14,
@@ -96,19 +92,21 @@ const initMap = () => {
 
 		map.geoObjects.add(placemark);
 
-		// Отключаем зум колесиком мыши
 		map.behaviors.disable("scrollZoom");
 	});
 };
 
-onMounted(() => {
-	if (!window.ymaps) {
+onMounted(() =>
+{
+	if (!window.ymaps)
+	{
 		const script = document.createElement("script");
 		script.src =
 			"https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=9564604a-4d17-4de4-9fef-00341fcf7a31";
 		script.onload = initMap;
 		document.head.appendChild(script);
-	} else {
+	} else
+	{
 		initMap();
 	}
 });
