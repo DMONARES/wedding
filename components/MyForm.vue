@@ -7,9 +7,9 @@
 				<div class="guests-header">
 					<div class="guests-label">
 						<p>Ваши данные</p>
-						<p class="hint">
+						<!-- <p class="hint">
 							Добавьте гостей, которые придут с вами
-						</p>
+						</p> -->
 					</div>
 
 					<!-- <div class="counter-wrapper">
