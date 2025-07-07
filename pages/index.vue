@@ -43,11 +43,11 @@ onMounted(() => {
 
 	<div v-else class="main-content">
 		<HeroSection />
-		<YandexMap />
 		<TimerSection />
 		<div id="content-section" class="content-container">
 			<MyForm />
 		</div>
+		<YandexMap />
 	</div>
 </template>
 
