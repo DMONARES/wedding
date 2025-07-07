@@ -285,7 +285,7 @@ onMounted(() =>
 
 	.map-wrapper {
 		flex: none;
-		height: 400px;
+		height: 250px;
 		order: 2;
 	}
 }
