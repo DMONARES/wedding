@@ -152,7 +152,7 @@ function cancelDelete()
 											guest.name
 										}}</span>
 										<span class="guests-page__cell-spacer"></span>
-										<!-- Кнопка удаления основного гостя (только у основного гостя)
+										<!-- Кнопка удаления основного гостя (только у основного гостя)-->
 										<button
 											v-if="guest.isMain"
 											class="guests-page__icon-btn guests-page__icon-btn--delete"
@@ -166,8 +166,8 @@ function cancelDelete()
 											:disabled="deleting"
 										>
 											<TrashIcon />
-										</button>-->
-										<!-- Кнопка удаления обычного гостя (только у обычных гостей) -->
+										</button>
+										<!-- Кнопка удаления обычного гостя (только у обычных гостей)
 										<button v-if="!guest.isMain"
 											class="guests-page__icon-btn guests-page__icon-btn--delete"
 											:title="`Удалить гостя (${guest.name})`" @click="
@@ -177,7 +177,7 @@ function cancelDelete()
 												)
 												" :disabled="deleting">
 											<TrashIcon />
-										</button>
+										</button>-->
 										<!-- Кнопка удаления всей группы (отдельная, справа у основного гостя)
 										<button
 											v-if="guest.isMain"
